@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %}Patient Dashboard · RuralCare AI{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Hello, {{ user.first_name|default:user.username }} 👋</h1>
+    <p class="text-muted mb-0">Your personal health overview</p>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <a href="{% url 'healthcare:symptom_check' %}" class="btn btn-warning">
+      <i class="bi bi-heart-pulse-fill me-1"></i>Run symptom check
+    </a>
+    <a href="{% url 'healthcare:appointment_create' %}" class="btn btn-success">
+      <i class="bi bi-calendar2-plus me-1"></i>Book appointment
+    </a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="text-muted text-uppercase small">Profile</h6>
+        <ul class="list-unstyled small mb-0">
+          <li><strong>Village:</strong> {{ patient.village|default:'—' }}</li>
+          <li><strong>Phone:</strong> {{ patient.phone|default:'—' }}</li>
+          <li><strong>DOB:</strong> {{ patient.date_of_birth|default:'—' }}</li>
+          <li><strong>Member since:</strong> {{ patient.created_at|date:'Y-m-d' }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="text-muted text-uppercase small mb-3">Upcoming appointments</h6>
+        {% if appointments %}
+          <ul class="list-group list-group-flush">
+            {% for a in appointments %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ a.doctor }}</strong>
+                  <span class="text-muted small d-block">{{ a.scheduled_for|date:'Y-m-d H:i' }}</span>
+                </div>
+                <span class="badge
+                  {% if a.status == 'pending' %}bg-warning text-dark
+                  {% elif a.status == 'confirmed' %}bg-success
+                  {% elif a.status == 'completed' %}bg-secondary
+                  {% else %}bg-danger{% endif %}">
+                  {{ a.get_status_display }}
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted small mb-0">No appointments yet.
+            <a href="{% url 'healthcare:appointment_create' %}">Book one now</a>.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm mt-4">
+  <div class="card-body">
+    <h6 class="text-muted text-uppercase small mb-3">Recent AI symptom checks</h6>
+    {% if symptom_checks %}
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>Symptoms</th>
+              <th>Triage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in symptom_checks %}
+              <tr>
+                <td class="small text-muted">{{ s.created_at|date:'Y-m-d H:i' }}</td>
+                <td>{{ s.symptoms|truncatewords:12 }}</td>
+                <td>
+                  <span class="badge
+                    {% if s.result.triage == 'urgent' %}bg-danger
+                    {% elif s.result.triage == 'gp' %}bg-warning text-dark
+                    {% else %}bg-success{% endif %}">
+                    {{ s.result.triage|default:'—' }}
+                  </span>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted small mb-0">No symptom checks yet. Try the
+        <a href="{% url 'healthcare:symptom_check' %}">AI symptom checker</a>.
+      </p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

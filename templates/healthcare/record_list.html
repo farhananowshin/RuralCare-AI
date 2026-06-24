@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Medical Records · RuralCare AI{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Medical Records</h1>
+    <p class="text-muted small mb-0">
+      {% if patient %}Your full diagnosis and prescription history.{% else %}Records you have authored for patients.{% endif %}
+    </p>
+  </div>
+  {% if doctor %}
+  <a href="{% url 'healthcare:record_create' %}" class="btn btn-primary btn-lg">
+    <i class="bi bi-clipboard2-pulse me-1"></i> Add Record
+  </a>
+  {% endif %}
+</div>
+
+{% if records %}
+  <div class="row g-3">
+    {% for rec in records %}
+      <div class="col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                {% if patient %}
+                  <div class="fw-semibold">{{ rec.doctor.user.get_full_name|default:rec.doctor.user.username }}</div>
+                  <div class="small text-muted">{{ rec.doctor.specialty|default:"Doctor" }}</div>
+                {% else %}
+                  <div class="fw-semibold">{{ rec.patient.user.get_full_name|default:rec.patient.user.username }}</div>
+                  <div class="small text-muted">{{ rec.patient.village|default:"—" }}</div>
+                {% endif %}
+              </div>
+              <span class="badge bg-light text-dark">{{ rec.created_at|date:"M j, Y" }}</span>
+            </div>
+
+            <h2 class="h6 text-primary mb-2">{{ rec.diagnosis }}</h2>
+
+            {% if rec.prescription %}
+              <p class="mb-2 small">
+                <span class="text-muted">Prescription:</span><br>
+                {{ rec.prescription|linebreaksbr }}
+              </p>
+            {% endif %}
+
+            {% if rec.notes %}
+              <p class="mb-0 small text-muted fst-italic">
+                "{{ rec.notes|linebreaksbr }}"
+              </p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card border-0 shadow-sm">
+    <div class="card-body text-center p-5">
+      <div class="display-6 text-muted mb-3"><i class="bi bi-folder2-open"></i></div>
+      <h2 class="h5">No medical records yet</h2>
+      {% if patient %}
+        <p class="text-muted">Once a doctor logs a diagnosis for you, it will appear here.</p>
+      {% else %}
+        <p class="text-muted">Add a diagnosis and prescription for one of your patients to start building their history.</p>
+        <a href="{% url 'healthcare:record_create' %}" class="btn btn-primary btn-lg">
+          <i class="bi bi-clipboard2-pulse me-1"></i> Add Record
+        </a>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

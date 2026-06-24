@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block title %}RuralCare AI · Home{% endblock %}
+
+{% block content %}
+
+{# ===================== HERO ===================== #}
+<section class="bg-white rounded-3 shadow-sm overflow-hidden mb-5">
+  <div class="container-fluid p-0">
+    <div class="row g-0 align-items-center">
+      <div class="col-lg-6 p-4 p-md-5 py-md-5">
+        <span class="badge bg-success-subtle text-success mb-3 px-3 py-2">
+          <i class="bi bi-stars me-1"></i> AI-powered rural healthcare
+        </span>
+        <h1 class="display-4 fw-bold mb-3">
+          Healthcare, <span class="text-success">within reach.</span>
+        </h1>
+        <p class="fs-5 text-muted mb-4">
+          RuralCare AI helps rural patients triage symptoms, book appointments with
+          local clinicians, and keep their medical records in one place — even
+          with limited connectivity.
+        </p>
+        <div class="d-flex gap-2 flex-wrap mb-4">
+          <a href="{% url 'healthcare:symptom_check' %}"
+             class="btn btn-success btn-lg shadow-sm">
+            <i class="bi bi-heart-pulse-fill me-2"></i>Check symptoms
+          </a>
+          <a href="{% url 'accounts:register_patient' %}"
+             class="btn btn-outline-success btn-lg">
+            <i class="bi bi-person-plus me-2"></i>Register as Patient
+          </a>
+          <a href="{% url 'accounts:register_doctor' %}"
+             class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-clipboard2-pulse me-2"></i>Register as Doctor
+          </a>
+        </div>
+        <a href="tel:112" class="btn btn-danger btn-lg shadow-sm w-100 w-md-auto">
+          <i class="bi bi-telephone-fill me-2"></i>
+          Emergency / SOS Helpline — Call 112
+        </a>
+      </div>
+      <div class="col-lg-6 bg-success-subtle">
+        <img
+          src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=900&q=80"
+          alt="Doctor consulting a patient"
+          class="hero-img"
+          onerror="this.onerror=null;this.src='https://placehold.co/900x500/198754/ffffff?text=Healthcare+for+All';"
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ===================== FEATURE CARDS ===================== #}
+<div class="row g-4 my-5">
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm hover-lift">
+      <div class="card-body p-4">
+        <div class="text-success fs-2 mb-2"><i class="bi bi-cpu"></i></div>
+        <h5 class="card-title">AI Triage</h5>
+        <p class="card-text text-muted">
+          Rule-based symptom checker with a swappable LLM backend.
+        </p>
+        <a href="{% url 'healthcare:symptom_check' %}" class="stretched-link"></a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm hover-lift">
+      <div class="card-body p-4">
+        <div class="text-primary fs-2 mb-2"><i class="bi bi-calendar-check"></i></div>
+        <h5 class="card-title">Appointments</h5>
+        <p class="card-text text-muted">
+          Book with a local doctor and track the status end-to-end.
+        </p>
+        <a href="{% url 'healthcare:appointment_list' %}" class="stretched-link"></a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm hover-lift">
+      <div class="card-body p-4">
+        <div class="text-info fs-2 mb-2"><i class="bi bi-folder2-open"></i></div>
+        <h5 class="card-title">Records</h5>
+        <p class="card-text text-muted">
+          Doctors log diagnoses and prescriptions; patients see the full history.
+        </p>
+        <a href="{% url 'healthcare:record_list' %}" class="stretched-link"></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ===================== HOW IT WORKS ===================== #}
+<section class="my-5 py-5">
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">How it Works</h2>
+    <p class="text-muted">Three simple steps from symptom to treatment.</p>
+  </div>
+  <div class="row g-5 text-center">
+    <div class="col-md-4">
+      <div class="bg-success-subtle step-circle text-success mx-auto mb-3">1</div>
+      <h5 class="mt-2"><i class="bi bi-search-heart me-1"></i> AI Triage</h5>
+      <p class="text-muted">
+        Describe your symptoms and our AI gives an instant triage recommendation.
+      </p>
+    </div>
+    <div class="col-md-4">
+      <div class="bg-primary-subtle step-circle text-primary mx-auto mb-3">2</div>
+      <h5 class="mt-2"><i class="bi bi-calendar2-plus me-1"></i> Book Doctor</h5>
+      <p class="text-muted">
+        Pick a local doctor and book an appointment that fits your schedule.
+      </p>
+    </div>
+    <div class="col-md-4">
+      <div class="bg-info-subtle step-circle text-info mx-auto mb-3">3</div>
+      <h5 class="mt-2"><i class="bi bi-bandaid me-1"></i> Get Treated</h5>
+      <p class="text-muted">
+        Consult the doctor, receive a diagnosis, and keep your records safely.
+      </p>
+    </div>
+  </div>
+</section>
+
+{# ===================== IMPACT STATS ===================== #}
+<section class="bg-success text-white rounded-3 shadow-sm p-4 p-md-5 my-5">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">Our Impact</h2>
+    <p class="text-white-50 mb-0">Bringing healthcare closer to rural communities.</p>
+  </div>
+  <div class="row text-center g-3">
+    <div class="col-6 col-md-3">
+      <div class="stat-number">50+</div>
+      <div class="text-white-50 text-uppercase small">Partner Clinics</div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-number">120+</div>
+      <div class="text-white-50 text-uppercase small">Verified Doctors</div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-number">1,000+</div>
+      <div class="text-white-50 text-uppercase small">Patients Served</div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-number">24/7</div>
+      <div class="text-white-50 text-uppercase small">AI Triage</div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

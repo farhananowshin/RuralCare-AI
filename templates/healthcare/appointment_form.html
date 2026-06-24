@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Book Appointment · RuralCare AI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h4 mb-3">Book an appointment</h1>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-success w-100 mt-3">Book appointment</button>
+        </form>
+        <a href="{% url 'healthcare:appointment_list' %}" class="small d-block mt-3">← Back to appointments</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

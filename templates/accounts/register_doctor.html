@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Register as Doctor · RuralCare AI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h2 class="h4 mb-3">Doctor Registration</h2>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-primary w-100 mt-3">Register as Doctor</button>
+        </form>
+        <p class="small text-muted mt-3 mb-0">
+          Already have an account? <a href="{% url 'accounts:login' %}">Sign in</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

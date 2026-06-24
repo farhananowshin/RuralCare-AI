@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}Doctor Dashboard · RuralCare AI{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Dr. {{ user.last_name|default:user.username }}</h1>
+    <p class="text-muted mb-0">Incoming patient appointments</p>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <a href="{% url 'healthcare:appointment_list' %}" class="btn btn-success">
+      <i class="bi bi-calendar2-week me-1"></i>All appointments
+    </a>
+    <a href="{% url 'healthcare:record_create' %}" class="btn btn-primary">
+      <i class="bi bi-clipboard2-pulse me-1"></i>Add Record
+    </a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="text-muted text-uppercase small">Profile</h6>
+        <ul class="list-unstyled small mb-0">
+          <li><strong>Specialty:</strong> {{ doctor.specialty|default:'—' }}</li>
+          <li><strong>Clinic:</strong> {{ doctor.clinic_name|default:'—' }}</li>
+          <li><strong>License #:</strong> {{ doctor.license_number|default:'—' }}</li>
+          <li><strong>Hours:</strong>
+            {{ doctor.available_from|default:'—' }} – {{ doctor.available_to|default:'—' }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="text-muted text-uppercase small mb-3">Recent appointments</h6>
+        {% if appointments %}
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>When</th>
+                  <th>Patient</th>
+                  <th>Reason</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for a in appointments %}
+                  <tr>
+                    <td class="small">{{ a.scheduled_for|date:'Y-m-d H:i' }}</td>
+                    <td>{{ a.patient }}</td>
+                    <td>{{ a.reason|default:'—' }}</td>
+                    <td>
+                      <span class="badge
+                        {% if a.status == 'pending' %}bg-warning text-dark
+                        {% elif a.status == 'confirmed' %}bg-success
+                        {% elif a.status == 'completed' %}bg-secondary
+                        {% else %}bg-danger{% endif %}">
+                        {{ a.get_status_display }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="d-flex gap-1 flex-wrap">
+                        {% if a.status == 'pending' %}
+                          <form method="post" action="{% url 'healthcare:appointment_confirm' a.pk %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-success">Confirm</button>
+                          </form>
+                        {% endif %}
+                        <a href="{% url 'healthcare:record_create_for_appointment' a.pk %}" class="btn btn-sm btn-outline-primary">
+                          <i class="bi bi-clipboard2-pulse"></i> Record
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="text-muted small mb-0">No appointments scheduled yet.</p>
+          <a href="{% url 'healthcare:record_create' %}" class="btn btn-sm btn-primary mt-2">
+            <i class="bi bi-clipboard2-pulse me-1"></i>Add your first record
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Add Medical Record · RuralCare AI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-9 col-lg-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-3">
+          <div class="text-primary fs-2 me-3"><i class="bi bi-clipboard2-pulse"></i></div>
+          <div>
+            <h1 class="h4 mb-0">Add Medical Record</h1>
+            <p class="text-muted small mb-0">Log a diagnosis and prescription for your patient.</p>
+          </div>
+        </div>
+
+        {% if appointment %}
+        <div class="alert alert-info small mb-3">
+          <i class="bi bi-calendar-check me-1"></i>
+          Pre-filled for <strong>{{ appointment.patient.user.get_full_name|default:appointment.patient.user.username }}</strong>
+          (appointment on {{ appointment.scheduled_for|date:"M j, Y H:i" }}).
+        </div>
+        {% if recent_check %}
+          {% with rc=recent_check.result %}
+          <div class="alert alert-{% if rc.triage == 'urgent' %}danger{% elif rc.triage == 'gp' %}warning{% else %}secondary{% endif %} small mb-3">
+            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+              <i class="bi bi-cpu"></i>
+              <strong>AI symptom check &#8212; {{ recent_check.created_at|date:"M j, H:i" }}</strong>
+              <span class="badge
+                {% if rc.triage == 'urgent' %}bg-danger
+                {% elif rc.triage == 'gp' %}bg-warning text-dark
+                {% else %}bg-success{% endif %}">
+                Triage: {{ rc.triage }}
+              </span>
+              <span class="badge
+                {% if rc.risk_level == 'high' %}bg-danger
+                {% elif rc.risk_level == 'moderate' %}bg-warning text-dark
+                {% else %}bg-success{% endif %}">
+                Risk: {{ rc.risk_level }} ({{ rc.risk_score }}/100)
+              </span>
+            </div>
+            <div class="fst-italic">"{{ recent_check.symptoms|truncatechars:140 }}"</div>
+            {% if rc.conditions %}
+              <div class="mt-1">
+                <span class="text-muted">Top conditions:</span>
+                {% for c in rc.conditions|slice:":3" %}
+                  <span class="badge bg-light text-dark me-1">{{ c.name }} ({{ c.confidence|floatformat:0 }}%)</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          {% endwith %}
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {{ form|crispy }}
+        </form>
+
+        <a href="{% url 'healthcare:record_list' %}" class="small d-block mt-3">← Back to records</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

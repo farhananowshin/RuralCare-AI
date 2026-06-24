@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard · RuralCare AI{% endblock %}
+
+{% block content %}
+<div class="text-center my-5">
+  <h1 class="h3 mb-3">Routing you to your dashboard…</h1>
+  <p class="text-muted">
+    <a href="{% url 'accounts:patient_dashboard' %}">Go to patient dashboard</a>
+    or
+    <a href="{% url 'accounts:doctor_dashboard' %}">go to doctor dashboard</a>.
+  </p>
+</div>
+{% endblock %}
